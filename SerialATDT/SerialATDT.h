@@ -10,8 +10,8 @@ class SerialATDT
 private:
 	std::string mComPortIdentifier;
 
-	bool getComPort(HANDLE *hFile);
-	std::string getComPortId();
+	bool getComPort(HANDLE *hFile, std::string customPort);
+	std::string getComPortId(std::string customPort);
 
 public:
 	//SerialATDT(std::string ident);
@@ -20,5 +20,5 @@ public:
 	SerialATDT();
 	~SerialATDT();
 
-	bool sendCommand(std::string command, std::string &response);
+	bool sendCommand(std::string command, std::string &response, std::string customPort);
 };

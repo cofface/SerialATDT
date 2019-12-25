@@ -52,8 +52,13 @@ std::wstring string2wstring(const std::string& str)
 	return w_str;
 }
 
-std::string SerialATDT::getComPortId()
+std::string SerialATDT::getComPortId(std::string customPort)
 {
+	std::string comPort = "";
+
+	if (!customPort.empty())
+		return customPort;
+
 	HDEVINFO hDevInfo;
 	SP_DEVINFO_DATA DeviceInfoData;
 	int devOffset = 0;
@@ -61,7 +66,6 @@ std::string SerialATDT::getComPortId()
 	HKEY devKey;
 	DWORD portNameSize;
 	DWORD result;
-	std::string comPort = "";
 	BYTE friendlyName[4096];
 	TCHAR devName[4096];
 	TCHAR portName[4096];
@@ -142,9 +146,9 @@ std::string SerialATDT::getComPortId()
 	return comPort;
 }
 
-bool SerialATDT::getComPort(HANDLE *hFile)
+bool SerialATDT::getComPort(HANDLE *hFile, std::string customPort)
 {
-	std::string comPort = getComPortId();
+	std::string comPort = getComPortId(customPort);
 
 	*hFile = INVALID_HANDLE_VALUE;
 
@@ -171,14 +175,14 @@ bool SerialATDT::getComPort(HANDLE *hFile)
 	return *hFile != INVALID_HANDLE_VALUE;
 }
 
-bool SerialATDT::sendCommand(std::string command, std::string &response)
+bool SerialATDT::sendCommand(std::string command, std::string &response, std::string customPort)
 {
 	bool retFlag = true;
 	HANDLE hFile = NULL;
 
 	response = "";
 
-	if (!getComPort(&hFile)) {
+	if (!getComPort(&hFile, customPort)) {
 		printf("SerialATDT-Unable to get comport\n");
 		return false;
 	}
@@ -298,10 +302,11 @@ bool SerialATDT::sendCommand(std::string command, std::string &response)
 }
 
 int main() {
-	SerialATDT a;
-	std::string command = "AT+DEVCONINFO";
+	SerialATDT _at;
+	std::string command = "AT^SN";
 	std::string response = "";
-	bool ret = a.sendCommand(command, response);
+	std::string customPort = "COM37";
+	bool ret = _at.sendCommand(command, response, customPort);
 	if(ret)
 		printf("%s\n",response.c_str());
 	system("pause");
