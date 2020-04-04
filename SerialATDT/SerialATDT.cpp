@@ -1,17 +1,13 @@
+/*
+Author: cofface <cofface@gmail.com>
+*/
+
 #include "SerialATDT.h"
 #include <setupapi.h>
 #include <devguid.h>
 #include <regstr.h>
 
 #pragma comment (lib, "setupapi.lib")
-
-//SerialATDT::SerialATDT(std::string ident) : mComPortIdentifier(ident)
-//{
-//}
-//
-//SerialATDT::~SerialATDT(void)
-//{
-//}
 
 SerialATDT::SerialATDT() {
 	
